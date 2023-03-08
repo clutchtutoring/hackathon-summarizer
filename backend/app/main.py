@@ -4,7 +4,7 @@ from functools import lru_cache
 from rq import Queue, Retry
 from rq.job import Job
 from redis import Redis
-from os import os
+import os
 
 from .config import Settings
 from .models import models
@@ -20,8 +20,6 @@ def get_settings():
 settings = get_settings()
 app.state.redis = Redis.from_url(settings.redis_url)
 app.state.task_queue = Queue(connection=app.state.redis)
-
-app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -61,8 +59,18 @@ async def get_summary(content_id: int):
 
 
 @app.get("/checkStatus/{job_id}")
-async def get_job(request: Request, job_id: int):
-    job_data = Job.fetch('my_job_id', connection=request.app.state.redis)
+async def get_job(request: Request, job_id: str):
+    job_data = Job.fetch(job_id, connection=request.app.state.redis)
+
     if job_data is None:
         raise HTTPException(status_code=404, detail="Job not found")
-    return job_data.decode('utf-8')
+
+    return {
+        "id": job_id,
+        "status": job_data.get_status(),
+        "summary": job_data.result,
+        "data": job_data.kwargs,
+        "enqueued_at": job_data.enqueued_at,
+        "started_at": job_data.started_at,
+        "ended_at": job_data.ended_at,
+    }
