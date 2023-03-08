@@ -16,8 +16,6 @@ class Summarizer:
     def download_video(self, videoId: str, url: str):
         obj = SmartDL(url, f"{self.videos_path}/{videoId}.mp4")
         obj.start()
-
-        print(f"Downloaded: {obj.get_dest()}")
         
     def convert_video(self, videoId: str):
         stream = ffmpeg.input(f"{self.videos_path}/{videoId}.mp4")
@@ -53,8 +51,6 @@ class Summarizer:
         summary = self.summarize_text(transcripts)
 
         self.save_summary(summary)
-
-        print("summary: ", summary)
 
         return summary
 
