@@ -1,10 +1,10 @@
 from typing import List
 from pydantic import BaseModel
 
-class Asset(BaseModel):
+class VideoAsset(BaseModel):
     id: str
     url: str
 
-class Job(BaseModel):
+class SummarizeJob(BaseModel):
     id: str
-    videoAssets: List[Asset]
+    videoAssets: List[VideoAsset]
