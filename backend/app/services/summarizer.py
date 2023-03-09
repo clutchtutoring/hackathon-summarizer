@@ -6,29 +6,40 @@ import ffmpeg
 import whisper
 
 class Summarizer:
-    def __init__(self, id: str, videoAssets: str):
-        self.id = id
-        self.videoAssets = videoAssets
-        self.videos_path = "./app/assets/videos"
-        self.audios_path = "./app/assets/audios"
-        self.summaries_path = "./app/assets/summaries"
+    """Provides a service to summarize videos"""
 
-    def download_video(self, videoId: str, url: str):
-        obj = SmartDL(url, f"{self.videos_path}/{videoId}.mp4")
+    def __init__(self, content_id: str, video_assets: str):
+        self.content_id = content_id
+        self.video_assets = video_assets
+        self.videos_path = self.get_path("../assets/videos")
+        self.audios_path = self.get_path("../assets/audios")
+        self.summaries_path = self.get_path("../assets/summaries")
+
+    def get_path(self, path: str):
+        """Get directory path"""
+        dir_path = os.path.dirname(__file__)
+        return os.path.join(dir_path, path)
+
+    def download_video(self, video_id: str, url: str):
+        """Download video"""
+        obj = SmartDL(url, f"{self.videos_path}/{video_id}.mp4")
         obj.start()
-        
-    def convert_video(self, videoId: str):
-        stream = ffmpeg.input(f"{self.videos_path}/{videoId}.mp4")
-        stream = ffmpeg.output(stream, f"{self.audios_path}/{videoId}.mp3")
+
+    def convert_video(self, video_id: str):
+        """Convert video to audio"""
+        stream = ffmpeg.input(f"{self.videos_path}/{video_id}.mp4")
+        stream = ffmpeg.output(stream, f"{self.audios_path}/{video_id}.mp3")
         ffmpeg.overwrite_output(stream).run()
 
-    def transcribe_audio(self, videoId: str):
+    def transcribe_audio(self, video_id: str):
+        """Transcribe audio"""
         model = whisper.load_model("base")
-        result = model.transcribe(f"{self.audios_path}/{videoId}.mp3")
+        result = model.transcribe(f"{self.audios_path}/{video_id}.mp3")
 
         return result["text"]
 
     def summarize_text(self, text: str):
+        """Summarize text"""
         docs = [Document(text)]
 
         summarizer = TransformersSummarizer(model_name_or_path="philschmid/bart-large-cnn-samsum")
@@ -37,13 +48,15 @@ class Summarizer:
         return summary[0].meta["summary"]
 
     def save_summary(self, text: str):
-        with open(f"{self.summaries_path}/{self.id}.txt", 'w') as f:
-            f.write(text)
+        """Save summary to file"""
+        with open(f"{self.summaries_path}/{self.content_id}.txt", 'w', encoding="utf-8") as file:
+            file.write(text)
 
     def execute(self):
+        """Execute summarization process"""
         transcripts = ""
 
-        for video in self.videoAssets:
+        for video in self.video_assets:
             self.download_video(video.id, video.url)
             self.convert_video(video.id)
             transcripts += self.transcribe_audio(video.id)
@@ -53,4 +66,3 @@ class Summarizer:
         self.save_summary(summary)
 
         return summary
-
