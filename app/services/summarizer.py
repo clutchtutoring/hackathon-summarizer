@@ -22,7 +22,7 @@ class Summarizer:
 
     def download_video(self, video_id: str, url: str):
         """Download video"""
-        obj = SmartDL(url, f"{self.videos_path}/{video_id}.mp4")
+        obj = SmartDL(url, f"{self.videos_path}/{video_id}.mp4", threads=10)
         obj.start()
 
     def convert_video(self, video_id: str):
@@ -55,10 +55,19 @@ class Summarizer:
     def execute(self):
         """Execute summarization process"""
         transcripts = ""
+        summary_file = f"{self.summaries_path}/{self.content_id}.txt"
+
+        if os.path.isfile(summary_file):
+            with open(summary_file, "r", encoding="utf-8") as file:
+                return file.read()
 
         for video in self.video_assets:
-            self.download_video(video.id, video.url)
-            self.convert_video(video.id)
+            if not os.path.isfile(f"{self.videos_path}/{video.id}.mp4"):
+                self.download_video(video.id, video.url)
+
+            if not os.path.isfile(f"{self.audios_path}/{video.id}.mp3"):
+                self.convert_video(video.id)
+
             transcripts += self.transcribe_audio(video.id)
 
         summary = self.summarize_text(transcripts)
