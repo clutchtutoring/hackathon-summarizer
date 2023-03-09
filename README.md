@@ -61,5 +61,5 @@ source ./start-worker.sh
 ```
 4. Go to the openapi specification:
 ```
-http://localhost:5000/docs
+http://localhost:8000/docs
 ```
