@@ -30,7 +30,7 @@ source .venv/bin/activate
 
 5. Install dependencies with pip:
 ```
-pip install -r requirements.txt
+pip install openai-whisper rq "fastapi[all]" farm-haystack pySmartDL ffmpeg-python
 ```
 
 6. Download ML models:
@@ -43,6 +43,9 @@ python3 download_models.py
 ### Development
 
 1. Start the redis service:
+
+* If you already have a local redis server you can skip this step. 
+
 ```
 docker-compose up -d
 ```
