@@ -4,6 +4,9 @@ from haystack import Document
 from pySmartDL import SmartDL
 import ffmpeg
 import whisper
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 class Summarizer:
     """Provides a service to summarize videos"""
@@ -22,6 +25,7 @@ class Summarizer:
 
     def download_video(self, video_id: str, url: str):
         """Download video"""
+        ssl._create_default_https_context = ssl._create_unverified_context
         obj = SmartDL(url, f"{self.videos_path}/{video_id}.mp4", threads=10)
         obj.start()
 

@@ -1,4 +1,5 @@
 __pycache__
 .venv
+app/assets/summaries/*.txt
 app/assets/audios/*.mp3
 app/assets/videos/*.mp4
