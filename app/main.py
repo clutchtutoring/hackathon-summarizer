@@ -20,7 +20,7 @@ def get_settings():
 # Setup Redis Queue
 settings = get_settings()
 app.state.redis = Redis.from_url(settings.redis_url)
-app.state.task_queue = Queue(connection=app.state.redis)
+app.state.task_queue = Queue(connection=app.state.redis, default_timeout=7200)
 
 app.add_middleware(
     CORSMiddleware,
