@@ -28,7 +28,30 @@ python3 -m venv .venv
 pip install -r requirements.txt
 ```
 
-5. Run the local server:
+5. Download ML models:
 ```
-source ./start-dev.sh
+python3 download_models.py
+```
+
+## Usage
+
+### Development
+
+1. Start the redis service:
+```
+docker-compose up -d
+```
+
+2. Run the local server:
+```
+source ./start-app.sh
+```
+
+3. In another terminal run the worker:
+```
+source ./start-worker.sh
+```
+4. Go to the openapi specification:
+```
+http://localhost:8000/docs
 ```

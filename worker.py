@@ -7,6 +7,7 @@ from app.config import Settings
 
 @lru_cache()
 def get_settings():
+    """Get settings from config"""
     return Settings()
 
 settings = get_settings()
