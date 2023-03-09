@@ -1,4 +1,4 @@
 __pycache__
 .venv
-assets/audios/*.mp3
-assets/videos/*.mp4
+app/assets/audios/*.mp3
+app/assets/videos/*.mp4
