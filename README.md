@@ -23,12 +23,17 @@ ffmpeg version 4.2.4-1ubuntu0.1 Copyright (c) 2000-2020 the FFmpeg developers
 python3 -m venv .venv
 ```
 
-4. Install dependencies with pip:
+4. Enter the virtual environment:
+```
+source .venv/bin/activate
+```
+
+5. Install dependencies with pip:
 ```
 pip install -r requirements.txt
 ```
 
-5. Download ML models:
+6. Download ML models:
 ```
 python3 download_models.py
 ```
