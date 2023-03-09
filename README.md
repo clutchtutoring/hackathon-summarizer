@@ -28,7 +28,21 @@ python3 -m venv .venv
 pip install -r requirements.txt
 ```
 
-5. Run the local server:
+## Usage
+
+### Development
+
+5. Start the redis service:
 ```
-source ./start-dev.sh
+docker-compose up -d
+```
+
+6. Run the local server:
+```
+source ./start-app.sh
+```
+
+7. In another terminal run the worker:
+```
+source ./start-worker.sh
 ```
